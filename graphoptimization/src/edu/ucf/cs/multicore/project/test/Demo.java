@@ -19,6 +19,7 @@ public class Demo {
 		init();
 		Node sourceNode = findSourceNode();
 		System.out.println(String.format("graph: %s\nnode: %s\ninDegree: %s\noutDegree: %s", graph,sourceNode,graph.inDegreeOf(sourceNode),graph.outDegreeOf(sourceNode)));
+		//Test
 	}
 	
 	private static void init() {
