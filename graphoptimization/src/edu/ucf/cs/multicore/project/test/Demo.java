@@ -2,6 +2,9 @@ package edu.ucf.cs.multicore.project.test;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
+
+import javax.xml.crypto.NodeSetData;
 
 import edu.ucf.cs.multicore.project.graphgenerator.GraphGenerator;
 import edu.ucf.cs.multicore.project.graphgenerator.WattsStrogatzBetaGenerator;
@@ -18,10 +21,39 @@ public class Demo {
 	public static void main(String[] args) {
 		init();
 		Node sourceNode = findSourceNode();
-		System.out.println(String.format("graph: %s\nnode: %s\ninDegree: %s\noutDegree: %s", graph,sourceNode,graph.inDegreeOf(sourceNode),graph.outDegreeOf(sourceNode)));
+		List<Node> nlist=sourceNode.getNeighboringNodes(sourceNode);
+		for(int i=0;i<nlist.size();i++){
+			System.out.println(sourceNode.toString()+":"+nlist.get(i));
+		}
+		Scanner s=new Scanner(System.in);
+		int dest=s.nextInt();
+		
+		findDestNode(sourceNode,dest);
+			
+		//System.out.println(String.format("graph: %s\nnode: %s\ninDegree: %s\noutDegree: %s", graph,sourceNode,graph.inDegreeOf(sourceNode),graph.outDegreeOf(sourceNode)));
 		//Test
 	}
 	
+	private static void findDestNode(Node sourceNode, int dest) {
+		// TODO Auto-generated method stub
+		//List<Node> nlist=sourceNode.getNeighboringNodes(sourceNode);
+		for(int i=0;i<graph.nodeList().size();i++){
+			if(sourceNode.toString().equals("Node"+" "+dest+"")){
+				System.out.println("FOund....");
+				System.exit(0);
+			}
+			else{
+				List<Node> nlist=sourceNode.getNeighboringNodes(sourceNode);
+				for(int j=0;j<nlist.size();j++){
+					Node node=nlist.get(j);
+					System.out.println("CurrentNode:"+node.toString());
+					findDestNode(node, dest);
+				}
+			}
+			
+		}
+	}
+
 	private static void init() {
 		int numberOfNodes = 50;
 		int degree = 4;

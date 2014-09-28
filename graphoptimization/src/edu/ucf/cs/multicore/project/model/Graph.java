@@ -27,6 +27,7 @@ public class Graph {
 
 	public void addEdge(Node source, Node target) {
 		wrappedGraph.addEdge(source, target);
+		source.addNeighboringNode(target);
 	}
 
 	public void removeEdge(Node source, Node target) {	
