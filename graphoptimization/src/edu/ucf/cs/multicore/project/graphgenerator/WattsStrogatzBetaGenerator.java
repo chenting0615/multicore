@@ -24,7 +24,7 @@ public class WattsStrogatzBetaGenerator implements GraphGenerator{
 		Node[] nodes = new Node[size];
 		// Creating a regular ring lattice
 		for (int i = 0; i < size; ++i) {
-			nodes[i] = nodeFactory.createNode(String.format("Node %d", i+1).toString());
+			nodes[i] = nodeFactory.createNode(String.format(""+(i+1)).toString());
 			target.addNode(nodes[i]);
 		}
 		for (int i = 0; i < size; ++i) {

@@ -20,20 +20,36 @@ public class Demo {
 	
 	public static void main(String[] args) {
 		init();
-		Node sourceNode = findSourceNode();
-		List<Node> nlist=sourceNode.getNeighboringNodes(sourceNode);
-		for(int i=0;i<nlist.size();i++){
-			System.out.println(sourceNode.toString()+":"+nlist.get(i));
-		}
+		System.out.println("Enter the source node");
 		Scanner s=new Scanner(System.in);
+		int source=s.nextInt();
+		System.out.println("Enter the destination node");
 		int dest=s.nextInt();
+		Node sourceNode = findSpecificNode(source);
+		Node destNode=findSpecificNode(dest);
+		SequentialBFS seqBFSObj=new SequentialBFS();
+		List<Node> nlist=sourceNode.getNeighboringNodes(sourceNode);
 		
-		findDestNode(sourceNode,dest);
+		seqBFSObj.searchNodeUsingSequentialBFS(sourceNode, destNode);
+		
+		/*for(int i=0;i<nlist.size();i++){
+			System.out.println(sourceNode.toString()+":"+nlist.get(i));
+		}*/
+		
+		//seqBFSObj.searchNodeUsingSequentialBFS(sourceNode, destNode)
+		//findDestNode(sourceNode,dest);
 			
 		//System.out.println(String.format("graph: %s\nnode: %s\ninDegree: %s\noutDegree: %s", graph,sourceNode,graph.inDegreeOf(sourceNode),graph.outDegreeOf(sourceNode)));
 		//Test
 	}
 	
+	private static Node findSpecificNode(int index) {
+		// TODO Auto-generated method stub
+		List<Node> nodeList = graph.nodeList();
+		return nodeList.get(index);
+		
+	}
+
 	private static void findDestNode(Node sourceNode, int dest) {
 		// TODO Auto-generated method stub
 		//List<Node> nlist=sourceNode.getNeighboringNodes(sourceNode);
@@ -55,7 +71,7 @@ public class Demo {
 	}
 
 	private static void init() {
-		int numberOfNodes = 50;
+		int numberOfNodes = 10000;
 		int degree = 4;
 		double beta = 0.5;
 		graphGenerator = new WattsStrogatzBetaGenerator(numberOfNodes, degree, beta);
