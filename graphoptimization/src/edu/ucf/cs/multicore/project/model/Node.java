@@ -17,10 +17,10 @@ public class Node {
 		return label != null ? label : super.toString();
 	}
 	
-	public List<Node> getNeighboringNodes(Node node){
+	public List<Node> getNeighboringNodes(){
 		
 		
-		return node.neihboringNodes;
+		return neihboringNodes;
 	}
 
 	public void addNeighboringNode(Node target) {

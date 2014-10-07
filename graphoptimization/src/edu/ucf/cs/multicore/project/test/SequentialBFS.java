@@ -32,7 +32,7 @@ public class SequentialBFS {
 		}
 		else{
 			
-			List<Node> neighboringList=sourceNode.getNeighboringNodes(sourceNode);
+			List<Node> neighboringList=sourceNode.getNeighboringNodes();
 			
 			for(int i=0;i<neighboringList.size();i++){
 				if(visitedArray[Integer.parseInt(neighboringList.get(i).toString())]!=1){
