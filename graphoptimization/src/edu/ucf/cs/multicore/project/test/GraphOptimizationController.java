@@ -6,9 +6,13 @@ import java.util.Scanner;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 import javax.xml.crypto.NodeSetData;
 
+import org.apache.log4j.Level;
+
+import edu.ucf.cs.multicore.project.Utility.Utility;
 import edu.ucf.cs.multicore.project.graphgenerator.GraphGenerator;
 import edu.ucf.cs.multicore.project.graphgenerator.WattsStrogatzBetaGenerator;
 import edu.ucf.cs.multicore.project.model.Graph;
@@ -28,6 +32,7 @@ public class GraphOptimizationController {
 	
 	public static void main(String[] args) {
 		init();
+		Utility.log(Level.INFO, "Finished initialization");
 		System.out.println("Enter the source node");
 		Scanner s=new Scanner(System.in);
 		int source=s.nextInt();

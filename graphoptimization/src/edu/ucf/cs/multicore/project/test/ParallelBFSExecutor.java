@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import edu.ucf.cs.multicore.LockFreeQueue.LockFreeQueue;
+import edu.ucf.cs.multicore.project.Utility.Utility;
 import edu.ucf.cs.multicore.project.model.Node;
 
 public class ParallelBFSExecutor implements Runnable {
@@ -31,7 +32,7 @@ public class ParallelBFSExecutor implements Runnable {
 	public void searchNodeUsingParallelBFS(Node srcNode, Node destNode){
 		
 			//check if queue is empty
-		
+			
 			while(!GraphOptimizationController.destinationReached){//Loop until the destination is reached
 				
 //				ConcurrentLinkedQueue<Node> localqueue= ConcurrentDataStructure.bfsQueue;
