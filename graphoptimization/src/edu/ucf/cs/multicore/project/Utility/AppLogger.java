@@ -11,7 +11,7 @@ public class AppLogger {
 
 	{
 
-		PropertyConfigurator.configure("/Users/priyeshwani/Desktop/du_logger.properties");
+		PropertyConfigurator.configure("du_logger.properties");
 
 	}
 

@@ -1,4 +1,4 @@
-package edu.ucf.cs.multicore.LockFreeQueue;
+package edu.ucf.cs.multicore.project.datastructure.LockFreeQueue;
 
 import edu.ucf.cs.multicore.project.model.Node;
 
@@ -11,9 +11,9 @@ public class TestLockFreeQ {
 		// TODO Auto-generated method stub
 		
 		
-		Node n1= new Node("1");
-		Node n2= new Node("2");
-		Node n3= new Node("3");
+		Node n1= new Node(1,"1",null);
+		Node n2= new Node(2,"2",null);
+		Node n3= new Node(3,"3",null);
 		
 		LockFreeQueue lfq=new LockFreeQueue();
 		lfq.enqueue(n1);

@@ -5,19 +5,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.graph.SimpleGraph;
 
 public class Graph {
 
-	private DirectedGraph<Node, Edge> wrappedGraph;
+	private UndirectedGraph<Node, Edge> wrappedGraph;
 
 	public Graph() {
-		wrappedGraph = new DefaultDirectedGraph<Node, Edge>(
+		wrappedGraph = new SimpleGraph<Node, Edge>(
 				Edge.class);
 	}
 	
-	public DirectedGraph<Node, Edge> AsGraph(){
+	public UndirectedGraph<Node, Edge> AsGraph(){
 		return wrappedGraph;
 	}
 	
@@ -27,7 +27,6 @@ public class Graph {
 
 	public void addEdge(Node source, Node target) {
 		wrappedGraph.addEdge(source, target);
-		source.addNeighboringNode(target);
 	}
 
 	public void removeEdge(Node source, Node target) {	
@@ -46,12 +45,25 @@ public class Graph {
 		return new ArrayList<Node>(wrappedGraph.vertexSet());
 	}
 
-	public int outDegreeOf(Node source) {
-		return wrappedGraph.outDegreeOf(source);
+	public int degreeOf(Node source) {
+		return wrappedGraph.degreeOf(source);
+	}
+	
+	public Set<Edge> edgesOf(Node node){
+		return wrappedGraph.edgesOf(node);
 	}
 
-	public int inDegreeOf(Node node) {
-		return wrappedGraph.inDegreeOf(node);
+	public List<Node> getAdjacentNodeList(Node node){
+		Set<Edge> edgesOfNode = edgesOf(node);
+		List<Node> adjacentNodes = new ArrayList<Node>();
+		for (Edge edge : edgesOfNode) {
+			adjacentNodes.add(edge.getOtherSide(node));
+		}
+		return adjacentNodes;
+	}
+	
+	public Node findNodeByIndex(Integer index){
+		return nodeList().get(index);
 	}
 	
 	@Override

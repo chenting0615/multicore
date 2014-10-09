@@ -1,10 +1,9 @@
-package edu.ucf.cs.multicore.LockFreeQueue;
+package edu.ucf.cs.multicore.project.datastructure.LockFreeQueue;
 
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import edu.ucf.cs.multicore.project.model.Node;
-public class QNode {
+class QNode {
 
 	public Node value;
 	public AtomicReference<QNode> next;
