@@ -6,6 +6,6 @@
 	<classpathentry kind="lib" path="lib/jgraph/jgrapht-jdk1.6.jar" sourcepath="lib/jgraph/src/src"/>
 	<classpathentry kind="lib" path="lib/jgraph/junit.jar"/>
 	<classpathentry kind="lib" path="lib/jgraph/TGGraphLayout.jar"/>
-	<classpathentry kind="lib" path="/Volumes/Machdd/TIBCO_Archives/Trunk_Fresh/Test_Framework/TestHarness/lib/log4j-1.2.13.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.17.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
