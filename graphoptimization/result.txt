@@ -274,3 +274,15 @@ Total time required to Execute using (ParallelBFSKQueueRunnable) : 396
 Total time required to Execute using (SequentialBFSRunnable) : 75
 Total time required to Execute using (ParallelBFSRunnable) : 1716
 Total time required to Execute using (ParallelBFSKQueueRunnable) : 490
+Total time required to Execute using (SequentialBFSRunnable) : 16
+Total time required to Execute using (ParallelBFSRunnable) : 1834
+Total time required to Execute using (ParallelBFSKQueueRunnable) : 163
+Total time required to Execute using (SequentialBFSRunnable) : 33
+Total time required to Execute using (ParallelBFSRunnable) : 1330
+Total time required to Execute using (ParallelBFSKQueueRunnable) : 63
+Total time required to Execute using (SequentialBFSRunnable) : 80
+Total time required to Execute using (ParallelBFSRunnable) : 2733
+Total time required to Execute using (ParallelBFSKQueueRunnable) : 219
+Total time required to Execute using (SequentialBFSRunnable) : 136
+Total time required to Execute using (ParallelBFSRunnable) : 867
+Total time required to Execute using (ParallelBFSKQueueRunnable) : 69
