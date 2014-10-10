@@ -18,7 +18,9 @@ public class TestConfig {
 	private static final String GRAPH_GENERATOR_PROPERTY_KEY = "graphGenerator";
 	private static final String SOURCE_NODEX_INDEX_KEY = "sourceNodeIndex";
 	private static final String DEST_NODEX_INDEX_KEY = "destNodeIndex";
-	private static final String NUMBER_OF_THREADS_KEY = "destNodeIndex";
+	private static final String NUMBER_OF_THREADS_KEY = "numberOfThreads";
+	private static final String K_PROPERTY_KEY = "K";
+	private static final String TESTS_PROPERTY_KEY = "TESTS";
 	
 	private static final int DEFAULT_NUMBER_OF_NODES = 10000;
 	private static final int DEFAULT_DEGREE = 10;
@@ -26,6 +28,8 @@ public class TestConfig {
 	private static final int DEFAULT_SOURCE_NODE_INDEX = 100;
 	private static final int DEFAULT_DEST_NODE_INDEX = 700;
 	private static final int DEFAULT_NUMBER_OF_THREADS = 700;
+	private static final int DEFAULT_K = 4;
+	private static final int DEFAULT_TESTS = 4;
 
 	private static final GraphGenerator DEFAULT_GRAPH_GENERATOR = new WattsStrogatzBetaGenerator(
 			DEFAULT_NUMBER_OF_NODES, DEFAULT_DEGREE, DEFAULT_BETA);
@@ -35,6 +39,8 @@ public class TestConfig {
 	int sourceNodeIndex;
 	int destNodeIndex;
 	int numberOfThreads;
+	int K;
+	int TESTS;
 	double beta;
 	GraphGenerator graphGenerator;
 	String resultFileName = "result.txt";
@@ -73,6 +79,10 @@ public class TestConfig {
 					.getProperty(DEST_NODEX_INDEX_KEY));
 			numberOfThreads = Integer.parseInt(PROPERTIES
 					.getProperty(NUMBER_OF_THREADS_KEY));
+			TESTS = Integer.parseInt(PROPERTIES
+					.getProperty(TESTS_PROPERTY_KEY));
+			K = Integer.parseInt(PROPERTIES
+					.getProperty(K_PROPERTY_KEY));
 			beta = Double
 					.parseDouble(PROPERTIES.getProperty(BETA_PROPERTY_KEY));
 			createGraphGenerator();
@@ -101,5 +111,7 @@ public class TestConfig {
 		this.sourceNodeIndex = DEFAULT_SOURCE_NODE_INDEX;
 		this.destNodeIndex = DEFAULT_DEST_NODE_INDEX;
 		this.numberOfThreads = DEFAULT_NUMBER_OF_THREADS;
+		this.TESTS = DEFAULT_TESTS;
+		this.K = DEFAULT_K;
 	}
 }
