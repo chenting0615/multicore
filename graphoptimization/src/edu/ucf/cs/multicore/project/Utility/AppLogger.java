@@ -11,7 +11,8 @@ public class AppLogger {
 
 	{
 
-		PropertyConfigurator.configure("du_logger.properties");
+		PropertyConfigurator.configure(Thread.currentThread()
+				.getContextClassLoader().getResourceAsStream("du_logger.properties"));
 
 	}
 
