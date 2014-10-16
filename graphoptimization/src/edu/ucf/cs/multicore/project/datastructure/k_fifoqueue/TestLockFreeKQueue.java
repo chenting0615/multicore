@@ -7,9 +7,9 @@ import edu.ucf.cs.multicore.project.model.Node;
 
 public class TestLockFreeKQueue {
 	
-	private static final int NumberOfOperations = 40;
+	private static final int NumberOfOperations = 12;
 	protected static final LockFreeKQueue lfkq = new LockFreeKQueue(4,4);
-	private static final int numberOfThreads = 10;
+	private static final int numberOfThreads = 1;
 	private static ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
 	public static void main(String[] args) throws Exception {
 		for(int i=0;i<numberOfThreads;i++){

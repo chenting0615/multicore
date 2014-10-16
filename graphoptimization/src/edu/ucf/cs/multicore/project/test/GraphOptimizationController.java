@@ -6,6 +6,7 @@ import edu.ucf.cs.multicore.project.Utility.Utility;
 import edu.ucf.cs.multicore.project.bfs.BFSStrategy;
 import edu.ucf.cs.multicore.project.bfs.ParallelBFS;
 import edu.ucf.cs.multicore.project.bfs.SequentialBFS;
+import edu.ucf.cs.multicore.project.datastructure.ConcurrentLinkedQueueWrapper;
 import edu.ucf.cs.multicore.project.datastructure.LockFreeQueue.LockFreeQueue;
 import edu.ucf.cs.multicore.project.datastructure.k_fifoqueue.LockFreeKQueue;
 import edu.ucf.cs.multicore.project.graphgenerator.GraphGenerator;
@@ -23,24 +24,28 @@ public class GraphOptimizationController {
 	private static BFSStrategy sequentialBFS;
 	private static BFSStrategy parallelBFS;
 	private static BFSStrategy parallelBFSKQueue;
+	private static BFSStrategy parallelBFSConcurrentQueue;
 	private static Node sourceNode;
 	private static Node destNode;
 	private static SequentialBFSRunnable sequentialBFSRunnable;
 	private static ParallelBFSRunnable parallelBFSRunnable;
 	private static ParallelBFSKQueueRunnable parallelBFSKQueueRunnable;
+	private static ParallelBFSConcurrentQueueRunnable parallelBFSConcurrentQueueRunnable;
 	private static LockFreeQueue lockFreeQueue;
 	private static LockFreeKQueue lockFreeKQueue;
+	private static ConcurrentLinkedQueueWrapper concurrentLinkedQueueWrapper;
 
 	
 	
 	public static void main(String[] args) {
 		init();
 		Utility.log(Level.INFO, "Finished initialization");
-
 		PerformanceMeter.measure(sequentialBFSRunnable);
 		PerformanceMeter.measure(parallelBFSRunnable);
 		parallelBFSKQueue = new ParallelBFS(config.numberOfThreads, lockFreeKQueue);
 		PerformanceMeter.measure(parallelBFSKQueueRunnable);
+		parallelBFSConcurrentQueue = new ParallelBFS(config.numberOfThreads, concurrentLinkedQueueWrapper);
+		PerformanceMeter.measure(parallelBFSConcurrentQueueRunnable);
 
 		System.out.println("Number of CAS failures:"+lockFreeQueue.getCasFailCount());
 		System.out.println("Number of CAS failures in K FIFO Q:"+lockFreeKQueue.getCasFailCount());
@@ -66,6 +71,13 @@ public class GraphOptimizationController {
 			parallelBFSKQueue.runBFS(sourceNode, destNode);
 		}
 	}
+	
+	private static class ParallelBFSConcurrentQueueRunnable implements Runnable {
+		@Override
+		public void run() {
+			parallelBFSConcurrentQueue.runBFS(sourceNode, destNode);
+		}
+	}
 
 	private static void init() {
 		config = new TestConfig();
@@ -76,8 +88,10 @@ public class GraphOptimizationController {
 		sequentialBFSRunnable = new SequentialBFSRunnable();
 		parallelBFSRunnable = new ParallelBFSRunnable();
 		parallelBFSKQueueRunnable = new ParallelBFSKQueueRunnable();
+		parallelBFSConcurrentQueueRunnable = new ParallelBFSConcurrentQueueRunnable();
 		lockFreeQueue = new LockFreeQueue();
 		lockFreeKQueue = new LockFreeKQueue(config.K, config.TESTS);
+		concurrentLinkedQueueWrapper = new ConcurrentLinkedQueueWrapper();
 		parallelBFS = new ParallelBFS(config.numberOfThreads, lockFreeQueue);
 		graphGenerator.generateGraph(graph, new NodeFactory() {
 			@Override
