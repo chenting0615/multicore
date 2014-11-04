@@ -1,0 +1,52 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf210
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\froman\fcharset0 Times-Roman;}
+{\colortbl;\red255\green255\blue255;\red26\green26\blue26;}
+\margl1440\margr1440\vieww14280\viewh9940\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 ********
+\b Graph traversal BFS parallelization using lock-free data
+\f1\b0  
+\f0\b structure and contention management mechanism***********\
+\
+
+\f1\b0 The project implementation is not completely done. It is halfway through\
+Implementation of graph generation and traversal using parallel BFS using concurrentLinkedqueue is done. Some of the configuration that will remain constant through out the course of project are as follows\
+\
+
+\b GraphParallelization properties:
+\b0 \
+\'93graphoptimization.properties\'94 files is a configuration file where we can specify following properties of the graph \
+\
+1. Number of nodes\
+2. degerr\
+3. beta\
+4. sourceNodeIndex\
+5. destNodeIndecx\
+6. numberOfThreads\
+7. k-value for k-FIFO queue implementation (still under implementation)\
+\
+
+\b For example:
+\b0 \
+\pard\pardeftab720
+
+\fs22 \cf2 numberOfNodes = 100000\
+#degree of nodes for WattsStrogatzBetaGenerator\
+degree = 10\
+#beta parameter for WattsStrogatzBetaGenerator\
+beta = 0.5\
+#graphGenerator class name\
+graphGenerator =WattsStrogatzBetaGenerator\
+sourceNodeIndex = 3\
+destNodeIndex = 87687\
+numberOfThreads=50\
+TESTS=4\
+K=20\
+\
+
+\fs24 The configuration specified above will be taken as an input for initializing the graph structure.\
+The source node and dest node will be set as two end points.\
+Number of threads will allow parallelization using specified number of threads\
+\
+These parameters can be used to compare the performance under various conditions and combinations.}

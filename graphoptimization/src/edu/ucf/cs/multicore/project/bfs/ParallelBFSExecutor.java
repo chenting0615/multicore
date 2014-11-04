@@ -41,7 +41,7 @@ public class ParallelBFSExecutor implements Runnable {
 			if(bfsQueue.isEmpty()){
 				//Enqueu the source node
 				bfsQueue.enqueue(srcNode);
-				System.out.println("Thread:"+THid+" Enqueing:"+srcNode.toString());
+				//System.out.println("Thread:"+THid+" Enqueing:"+srcNode.toString());
 			}
 			else{
 				//Dequeue the bf queue
@@ -59,13 +59,13 @@ public class ParallelBFSExecutor implements Runnable {
 							if(!visitedArray[nodeList.get(i).getIndex()]){
 								visitedArray[nodeList.get(i).getIndex()]=true;
 								bfsQueue.enqueue(nodeList.get(i));
-								System.out.println("Thread:"+THid+" Enqueing:"+nodeList.get(i).toString());
+								//System.out.println("Thread:"+THid+" Enqueing:"+nodeList.get(i).toString());
 							}
 						}
 					}
 				}
 				catch(Exception e){
-					Utility.log(Level.ERROR, e.getMessage());
+					//Utility.log(Level.ERROR, e.getMessage());
 				}
 			}
 		}

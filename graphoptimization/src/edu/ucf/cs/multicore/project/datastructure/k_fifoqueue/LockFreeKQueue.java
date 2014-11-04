@@ -1,6 +1,7 @@
 package edu.ucf.cs.multicore.project.datastructure.k_fifoqueue;
 
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
@@ -18,7 +19,7 @@ public class LockFreeKQueue implements Queuable<Node> {
 	private Integer TESTS = K;
 	public AtomicReference<KQSegment> tail;
 	public AtomicReference<KQSegment> head;
-	private int casFailCount;
+	private AtomicInteger casFailCount;
 	private Random rand;
 
 	public LockFreeKQueue(int K, int TESTS) {
@@ -28,7 +29,7 @@ public class LockFreeKQueue implements Queuable<Node> {
 		kQSegment.next.set(kQSegment);
 		this.head = new AtomicReference<KQSegment>(kQSegment);
 		this.tail = new AtomicReference<KQSegment>(kQSegment);
-		casFailCount = 0;
+		casFailCount = new AtomicInteger(0);
 		rand = new Random();
 	}
 
@@ -46,7 +47,7 @@ public class LockFreeKQueue implements Queuable<Node> {
 							if (commited(oldTail, newItem, index))  //validate the insertion
 								return;
 						}else
-							casFailCount++;
+							casFailCount.getAndIncrement();
 					}
 				}else{ //no empty slot is found in the current tail k-segment
 					advanceTail(oldTail, next);
@@ -72,7 +73,7 @@ public class LockFreeKQueue implements Queuable<Node> {
 					if(oldHead.get().nodes.compareAndSet(index,oldItem, emptyItem)){
 						return oldItem.get().value.get();
 					}else
-						casFailCount++;
+						casFailCount.getAndIncrement();
 				}else{
 					if(oldHead.get().equals(oldTail.get()) && oldTail.get().equals(tail.get()))
 						return null;
@@ -101,7 +102,7 @@ public class LockFreeKQueue implements Queuable<Node> {
 			return true;
 		else if(!inQueue(oldTail, currentTail, currentHead)){ // the inserted item already got dequeued at validation time by a concurrent thread 
 			if(!oldTail.get().nodes.compareAndSet(index,newItem, emptyItem)){ // so try to undo the insertion using CAS 
-				casFailCount++;
+				casFailCount.getAndIncrement();
 				return true;
 			}
 		}else{
@@ -109,12 +110,12 @@ public class LockFreeKQueue implements Queuable<Node> {
 			if(head.compareAndSet(currentHead.get(), newHead.get())){// a race with concurrent dequeueing threads may occur which may not have observed the insertion and may try to advance the head pointer in the meantime. This would result in loss of the inserted item. To prevent that the method tries to increment the ABA counter in the head atomic value using CAS
 				return true;
 			}else{
-				casFailCount++;
+				casFailCount.getAndIncrement();
 			}
 			//If this fails a concurrent dequeue operation may have changed head which would make the insertion potentially
 			//invalid. Hence after that the method tries to undo the insertion using CAS			
 			if(!oldTail.get().nodes.compareAndSet(index,newItem, emptyItem)){//the inserted item already got dequeued at validation time by a concurrent thread
-				casFailCount++;
+				casFailCount.getAndIncrement();
 				return true;
 			}
 		}
@@ -124,9 +125,9 @@ public class LockFreeKQueue implements Queuable<Node> {
 	private void advanceHead(AtomicReference<KQSegment> oldHead,
 			AtomicReference<KQSegment> next) {
 		if(next.get() != null){
-			casFailCount++;
+			casFailCount.getAndIncrement();
 			if(!head.compareAndSet(oldHead.get(), next.get()))
-				casFailCount++;
+				casFailCount.getAndIncrement();
 		}
 	}
 	
@@ -135,13 +136,13 @@ public class LockFreeKQueue implements Queuable<Node> {
 		if(next.get() == null || oldTail.get().equals(next.get())){
 			if(oldTail.get().next.compareAndSet(next.get(), new KQSegment(K))){
 				if(!tail.compareAndSet(oldTail.get(), oldTail.get().next.get()))
-					casFailCount++;
+					casFailCount.getAndIncrement();
 			}else{
-				casFailCount++;
+				casFailCount.getAndIncrement();
 			}
 		}else{
 			if(!tail.compareAndSet(oldTail.get(), next.get()))
-				casFailCount++;
+				casFailCount.getAndIncrement();
 		}
 	}	
 	
@@ -218,7 +219,7 @@ public class LockFreeKQueue implements Queuable<Node> {
 	}
 	
 	public Integer getCasFailCount(){
-		return casFailCount;
+		return casFailCount.get();
 	}
 	
 	@Override

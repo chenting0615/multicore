@@ -21,6 +21,7 @@ public class TestConfig {
 	private static final String NUMBER_OF_THREADS_KEY = "numberOfThreads";
 	private static final String K_PROPERTY_KEY = "K";
 	private static final String TESTS_PROPERTY_KEY = "TESTS";
+	private static final String ENABLE_BACKOFF_STRATEGY="enableBackoffStrategy";
 	
 	private static final int DEFAULT_NUMBER_OF_NODES = 10000;
 	private static final int DEFAULT_DEGREE = 10;
@@ -85,6 +86,7 @@ public class TestConfig {
 					.getProperty(K_PROPERTY_KEY));
 			beta = Double
 					.parseDouble(PROPERTIES.getProperty(BETA_PROPERTY_KEY));
+			GraphOptimizationController.enableExpBackoffStrategy=Boolean.parseBoolean(PROPERTIES.getProperty(ENABLE_BACKOFF_STRATEGY));
 			createGraphGenerator();
 		} catch (Throwable e) {
 			Utility.log(Level.ERROR,"Cannot load properties file '"
