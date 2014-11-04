@@ -1,9 +1,17 @@
 package edu.ucf.cs.multicore.project.test;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 import org.apache.log4j.Level;
 
@@ -14,6 +22,7 @@ import edu.ucf.cs.multicore.project.bfs.SequentialBFS;
 import edu.ucf.cs.multicore.project.datastructure.ConcurrentLinkedQueueWrapper;
 import edu.ucf.cs.multicore.project.datastructure.LockFreeQueue.LockFreeQueue;
 import edu.ucf.cs.multicore.project.datastructure.k_fifoqueue.LockFreeKQueue;
+import edu.ucf.cs.multicore.project.graphgenerator.FileLoadedGenerator;
 import edu.ucf.cs.multicore.project.graphgenerator.GraphGenerator;
 import edu.ucf.cs.multicore.project.model.Graph;
 import edu.ucf.cs.multicore.project.model.Node;
@@ -44,12 +53,17 @@ public class GraphOptimizationController {
 	private static List<Integer> casFailuresArrayLockFreeQueue=new ArrayList<Integer>();
 	public static int MAXTHREADS=4;
 	public static boolean enableExpBackoffStrategy=false;
-
+	private static String filePath = "graph.txt";
 	
 	
 	public static void main(String[] args) {
-		init(true);
-		
+		try {
+			init(true);
+			//storeGraph();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Utility.log(Level.INFO, "Finished initialization");
 		String input=null;
 		/*if(!input.equals("")){
@@ -57,31 +71,42 @@ public class GraphOptimizationController {
 		}
 		else
 			samplesNo=1;*/
-		do{
-			flushallQueues();
-			init(false);
-			System.out.println("Initialization of the graph is done. Please specify the number of threads");
-			Scanner scObject=new Scanner(System.in);
-			input=scObject.next();
-			config.numberOfThreads=Integer.parseInt(input);
+		
+			
+			try {
+				init(false);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//System.out.println("Initialization of the graph is done. Please specify the number of threads");
+			
+			
 			MAXTHREADS=config.numberOfThreads;
 			//for(int i=0;i<samplesNo;i++){
 				
 				//PerformanceMeter.measure(sequentialBFSRunnable);
-				//parallelBFSKQueue = new ParallelBFS(config.numberOfThreads, lockFreeKQueue);
-				//PerformanceMeter.measure(parallelBFSKQueueRunnable);
-				parallelBFSRunnable = new ParallelBFSRunnable();
-				parallelBFS = new ParallelBFS(config.numberOfThreads, lockFreeQueue);
-				PerformanceMeter.measure(parallelBFSRunnable);
+			
+			
+				parallelBFSKQueue = new ParallelBFS(config.numberOfThreads, lockFreeKQueue);
+				PerformanceMeter.measure(parallelBFSKQueueRunnable);
+			
+			
+				//parallelBFSRunnable = new ParallelBFSRunnable();
+				//parallelBFS = new ParallelBFS(config.numberOfThreads, lockFreeQueue);
+				//PerformanceMeter.measure(parallelBFSRunnable);
+				
+				
 				//parallelBFSConcurrentQueue = new ParallelBFS(config.numberOfThreads, concurrentLinkedQueueWrapper);
 				//PerformanceMeter.measure(parallelBFSConcurrentQueueRunnable);
+				
+				
 				casFailuresArrayKQueue.add(lockFreeKQueue.getCasFailCount());
 				casFailuresArrayLockFreeQueue.add(lockFreeQueue.getCasFailCount());
 				System.out.println("Number of CAS failures:"+lockFreeQueue.getCasFailCount());
 				System.out.println("Number of CAS failures in K FIFO Q:"+lockFreeKQueue.getCasFailCount());
 			//}
-		}
-		while(!(input.equals("exit")||input.equals("n")));
+		
 		
 		
 		/*for(int i=0;i<casFailuresArrayKQueue.size();i++){
@@ -136,7 +161,7 @@ public class GraphOptimizationController {
 		}
 	}
 
-	private static void init(boolean initializeGraph) {
+	private static void init(boolean initializeGraph) throws IOException {
 		config = new TestConfig();
 		config.loadConfig();
 		
@@ -149,18 +174,22 @@ public class GraphOptimizationController {
 		lockFreeKQueue = new LockFreeKQueue(config.K, config.TESTS);
 		concurrentLinkedQueueWrapper = new ConcurrentLinkedQueueWrapper();
 		parallelBFS = new ParallelBFS(config.numberOfThreads, lockFreeQueue);
-		if(initializeGraph){
-			graphGenerator = config.graphGenerator;
-			graph = new Graph();
+		graphGenerator = config.graphGenerator;
+		graph = new Graph();
+		
+
+		/*if(initializeGraph){
+			
 			graphGenerator.generateGraph(graph, new NodeFactory() {
 				@Override
 				public Node createNode(Integer index, String label) {
 					return new Node(index, label, graph);
 				}
 			});
-			sourceNode = graph.findNodeByIndex(config.sourceNodeIndex);
-			destNode = graph.findNodeByIndex(config.destNodeIndex);
-		}
+				}*/
+		loadGraph();
+		sourceNode = graph.findNodeByIndex(config.sourceNodeIndex);
+		destNode = graph.findNodeByIndex(config.destNodeIndex);
 		
 		
 	}
@@ -169,7 +198,81 @@ public class GraphOptimizationController {
 		return config.numberOfNodes;
 	}
 	
-
+	public static void storeGraph() throws IOException{
+		List<Node> nodeList = graph.nodeList();
+		List<String> fileLines = new ArrayList<String>();
+		for (Node node : nodeList) {
+			StringBuilder lineBuilder = new StringBuilder(String.valueOf(node.getIndex()));
+			lineBuilder.append("     ");
+			for (Node adj : node.getNeighboringNodes()) {
+				lineBuilder.append(adj.getIndex());
+				lineBuilder.append(" ");
+			}
+			fileLines.add(lineBuilder.toString());
+		}
+		BufferedWriter graphFile = new BufferedWriter(new FileWriter(filePath,true));
+		for (String line : fileLines) {
+			graphFile.write(line);
+			graphFile.newLine();
+		}
+		graphFile.close();		
+	}
+	
+	
+	public static void loadGraph() throws IOException{
+		List<String> doRead = doRead();
+		Map<Integer,List<Integer>> graphMap = new HashMap<Integer,List<Integer>>();
+		for (String line : doRead) {
+			StringTokenizer st = new StringTokenizer(line," ");
+			if(st.hasMoreTokens()){
+				String nextToken = st.nextToken();
+				Integer index = Integer.parseInt(nextToken);
+				List<Integer> adjList = graphMap.get(index);
+				if(adjList == null){
+					adjList = new ArrayList<Integer>();
+				}
+				while(st.hasMoreTokens()){
+					nextToken = st.nextToken();
+					int index2 = Integer.parseInt(nextToken);
+					adjList.add(index2);
+				}
+				graphMap.put(index, adjList);
+			}
+		}
+		graph = new Graph();
+		new FileLoadedGenerator(graphMap).generateGraph(graph, new NodeFactory() {
+			@Override
+			public Node createNode(Integer index, String label) {
+				return new Node(index, label, graph);
+			}
+		});
+	}
+	
+	public static List<String> doRead() throws IOException{
+		if(filePath == null){
+			System.err.println("please specify file path ...");
+			return null;
+		}
+		BufferedReader inFile = null;
+		try {
+			inFile = new BufferedReader(new FileReader(filePath));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		List<String> fileContent = new ArrayList<String>();
+		String curLine = " ";
+		try {
+			while( (curLine = inFile.readLine()) != null){
+				fileContent.add(curLine);				
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		inFile.close();
+		return fileContent;
+	}
 
 
 }
