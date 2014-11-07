@@ -88,23 +88,22 @@ public class GraphOptimizationController {
 				//PerformanceMeter.measure(sequentialBFSRunnable);
 			
 			
-				parallelBFSKQueue = new ParallelBFS(config.numberOfThreads, lockFreeKQueue);
-				PerformanceMeter.measure(parallelBFSKQueueRunnable);
+				//parallelBFSKQueue = new ParallelBFS(config.numberOfThreads, lockFreeKQueue);
+				//PerformanceMeter.measure(parallelBFSKQueueRunnable);
 			
 			
-				//parallelBFSRunnable = new ParallelBFSRunnable();
-				//parallelBFS = new ParallelBFS(config.numberOfThreads, lockFreeQueue);
-				//PerformanceMeter.measure(parallelBFSRunnable);
+				parallelBFSRunnable = new ParallelBFSRunnable();
+				parallelBFS = new ParallelBFS(config.numberOfThreads, lockFreeQueue);
+				PerformanceMeter.measure(parallelBFSRunnable);
 				
 				
 				//parallelBFSConcurrentQueue = new ParallelBFS(config.numberOfThreads, concurrentLinkedQueueWrapper);
 				//PerformanceMeter.measure(parallelBFSConcurrentQueueRunnable);
 				
 				
-				casFailuresArrayKQueue.add(lockFreeKQueue.getCasFailCount());
-				casFailuresArrayLockFreeQueue.add(lockFreeQueue.getCasFailCount());
+				
 				System.out.println("Number of CAS failures:"+lockFreeQueue.getCasFailCount());
-				System.out.println("Number of CAS failures in K FIFO Q:"+lockFreeKQueue.getCasFailCount());
+				//System.out.println("Number of CAS failures in K FIFO Q:"+lockFreeKQueue.getCasFailCount());
 			//}
 		
 		

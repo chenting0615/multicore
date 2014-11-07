@@ -5,6 +5,7 @@ import java.util.concurrent.Executors;
 
 import edu.ucf.cs.multicore.project.datastructure.Queuable;
 import edu.ucf.cs.multicore.project.model.Node;
+import edu.ucf.cs.multicore.project.test.PerformanceMeter;
 
 public class ParallelBFS implements BFSStrategy{
 	
@@ -26,6 +27,7 @@ public class ParallelBFS implements BFSStrategy{
 			Runnable worker=new ParallelBFSExecutor(i, source, dest, queue);
 			workers[i] = worker;
 		}
+		PerformanceMeter.startTime=System.currentTimeMillis();
 		for(int i=0;i<numberOfThreads;i++){
 			executor.execute(workers[i]);
 		}

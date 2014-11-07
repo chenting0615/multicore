@@ -32,12 +32,9 @@ public class LockFreeQueue implements Queuable<Node> {
 
 	public void enqueue(Node node) {
 		QNode qnode = new QNode(node);
-		int counter = 0;
 		while (true) {
-			counter++;
 			QNode last = tail.get();
 			QNode next = last.next.get();
-
 			if (last == tail.get()) {
 				if (next == null) {
 					if (last.next.compareAndSet(next, qnode)) {
@@ -47,50 +44,14 @@ public class LockFreeQueue implements Queuable<Node> {
 						casFailCount++;
 						if(GraphOptimizationController.enableExpBackoffStrategy){
 							bckoffStratObj.applyBackoffStrategy(Thread.currentThread(), casFailCount);
-						}
-						/*if(!GraphOptimizationController.threadCASFailures.containsKey(Thread.currentThread().getId())){
-							GraphOptimizationController.threadCASFailures.put(Integer.valueOf((int) Thread.currentThread().getId()), 1);
-						}
-						else{
-							int val=GraphOptimizationController.threadCASFailures.get(Thread.currentThread().getId());
-							GraphOptimizationController.threadCASFailures.put((int) Thread.currentThread().getId(), val+1);
-						}
-						int val=(int)GraphOptimizationController.threadCASFailures.get(Integer.valueOf((int) Thread.currentThread().getId()));
-						if(val>=1){
-							try {
-								System.out.println("cas #" + casFailCount);
-								Thread.currentThread().sleep(100);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}*/
-						
+						}			
 					}
 				} else {
 					if (!tail.compareAndSet(last, next)){
 						casFailCount++;
 						if(GraphOptimizationController.enableExpBackoffStrategy){
 							bckoffStratObj.applyBackoffStrategy(Thread.currentThread(), casFailCount);
-						}
-						/*if(!GraphOptimizationController.threadCASFailures.containsKey(Thread.currentThread().getId())){
-							GraphOptimizationController.threadCASFailures.put(Integer.valueOf((int) Thread.currentThread().getId()), 1);
-						}
-						else{
-							int val=GraphOptimizationController.threadCASFailures.get(Thread.currentThread().getId());
-							GraphOptimizationController.threadCASFailures.put((int) Thread.currentThread().getId(), val+1);
-						}
-						int val=(int)GraphOptimizationController.threadCASFailures.get(Integer.valueOf((int) Thread.currentThread().getId()));
-						if(val>=1){
-							try {
-								System.out.println("cas #" + casFailCount);
-								Thread.currentThread().sleep(100);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}*/
-						
+						}	
 					}
 				}
 			}
@@ -112,25 +73,7 @@ public class LockFreeQueue implements Queuable<Node> {
 						if(GraphOptimizationController.enableExpBackoffStrategy){
 							bckoffStratObj.applyBackoffStrategy(Thread.currentThread(), casFailCount);
 						}
-						/*if(!GraphOptimizationController.threadCASFailures.containsKey(Thread.currentThread().getId())){
-							GraphOptimizationController.threadCASFailures.put(Integer.valueOf((int) Thread.currentThread().getId()), 1);
-						}
-						else{
-							int val=GraphOptimizationController.threadCASFailures.get(Thread.currentThread().getId());
-							GraphOptimizationController.threadCASFailures.put((int) Thread.currentThread().getId(), val+1);
-						}
-						int val=(int)GraphOptimizationController.threadCASFailures.get(Integer.valueOf((int) Thread.currentThread().getId()));
-						if(val>=1){
-							try {
-								System.out.println("cas #" + casFailCount);
-								Thread.currentThread().sleep(100);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}*/
-					
-					}
+											}
 				} else {
 					Node value = next.value;
 					if (head.compareAndSet(first, next)) {
@@ -140,23 +83,6 @@ public class LockFreeQueue implements Queuable<Node> {
 						if(GraphOptimizationController.enableExpBackoffStrategy){
 							bckoffStratObj.applyBackoffStrategy(Thread.currentThread(), casFailCount);
 						}
-						/*if(!GraphOptimizationController.threadCASFailures.containsKey(Thread.currentThread().getId())){
-							GraphOptimizationController.threadCASFailures.put(Integer.valueOf((int) Thread.currentThread().getId()), 1);
-						}
-						else{
-							int val=GraphOptimizationController.threadCASFailures.get(Thread.currentThread().getId());
-							GraphOptimizationController.threadCASFailures.put((int) Thread.currentThread().getId(), val+1);
-						}
-						int val=(int)GraphOptimizationController.threadCASFailures.get(Integer.valueOf((int) Thread.currentThread().getId()));
-						if(val>=1){
-							try {
-								System.out.println("cas #" + casFailCount);
-								Thread.currentThread().sleep(100);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}*/
 					}
 				}
 			}

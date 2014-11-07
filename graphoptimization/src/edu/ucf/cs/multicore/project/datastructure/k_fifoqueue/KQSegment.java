@@ -26,6 +26,14 @@ public class KQSegment {
 		return sb.toString();
 	}
 	
+	public boolean isEmpty(){
+		for(int i = 0; i < nodes.length(); i++){
+		if(nodes.get(i) != null)
+		return false;
+		}
+		return true;
+		}
+	
 	
 
 }

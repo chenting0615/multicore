@@ -62,9 +62,13 @@ public class Graph {
 		return adjacentNodes;
 	}
 	
-	public Node findNodeByIndex(Integer index){
-		return nodeList().get(index);
-	}
+	 public Node findNodeByIndex(Integer index){
+	    	for (Node node: nodeList()) {
+	    	if(node.getIndex().equals(index))
+	    	return node;
+	    	}
+	    	return null;
+	 }
 	
 	@Override
 	public String toString() {

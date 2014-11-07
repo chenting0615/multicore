@@ -58,11 +58,17 @@ public class LockFreeKQueue implements Queuable<Node> {
 	}
 
 	public Node dequeue() throws Exception {
+		int tryC = 0;
 		while (true) {
+			System.out.println("try " + (++tryC));
+			//System.out.println(toString());
 			AtomicReference<KQSegment> oldTail = tail;
 			AtomicReference<KQSegment> oldHead = head;
 			AtomicReference<KQSegment> next = oldHead.get().next;
+			System.out.println("call before findItem " + oldHead);
 			Integer index = findItem(oldHead);
+			System.out.println("call after find Item "+ index);
+			System.out.println(toString());
 			if (oldHead == head) {// checks if the queue state has been consistently observed by checking whether head changed in the meantime which would trigger a retry 
 				if(index != null && oldHead.get().nodes.get(index) != null){ // an item was found
 					AtomicReference<KQNode> oldItem = oldHead.get().nodes.get(index);
@@ -178,6 +184,8 @@ public class LockFreeKQueue implements Queuable<Node> {
 		int nextInt = rand.nextInt(K);
 		int i = nextInt - 1;
 		do{
+			
+			System.out.println("ThreadID:"+Thread.currentThread().getId()+"Still Searching...Value of i:"+i  + " search for " + oldHead);
 			if(i == K - 1)
 				i = 0;
 			else
@@ -215,7 +223,10 @@ public class LockFreeKQueue implements Queuable<Node> {
 	
 
 	public boolean isEmpty() {
-		return (tail.get() == head.get());
+		if(tail.get() == head.get()){
+		return tail.get().isEmpty();
+		}
+		return false;
 	}
 	
 	public Integer getCasFailCount(){

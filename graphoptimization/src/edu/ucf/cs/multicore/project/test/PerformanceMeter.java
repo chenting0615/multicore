@@ -5,8 +5,10 @@ import java.io.IOException;
 
 public class PerformanceMeter {
 	
+	public static long startTime=0;
+	
 	public static void measure(Runnable runnable){
-		long startTime=System.currentTimeMillis();
+		//long startTime=System.currentTimeMillis();
 		runnable.run();
 		long endTime=System.currentTimeMillis();
 		long executionTime=endTime-startTime;
